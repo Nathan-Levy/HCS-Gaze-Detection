@@ -1,4 +1,11 @@
 //
+//  ViewController2.swift
+//  EyedidSample
+//
+//  Created by Nathan Levy on 04/03/2025.
+//
+
+//
 //  ViewController.swift
 //  EyedidSample
 //
@@ -11,185 +18,94 @@ import Eyedid
 
 class ViewController: UIViewController {
 
-  @IBOutlet weak var startBtn: UIButton!
-  @IBOutlet weak var stopBtn: UIButton!
-  @IBOutlet weak var caliBtn: UIButton!
-
   @IBOutlet weak var versionLabel: UILabel!
+    
+  @IBOutlet weak var dirBtn: UIButton!
+  @IBOutlet weak var dotBtn: UIButton!
+  @IBOutlet weak var pasBtn: UIButton!
+  @IBOutlet weak var imgBtn: UIButton!
   
-  var tracker: GazeTracker?
   // TODO: change licence key
-  let license : String = "typo your license key"
+  let license : String = "dev_gu8vkaqajvi4b62kr08z5s77gt7aoq0tbrixntg5"
 
-  let pointView : PointView = PointView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-  let calibrationPointView : CalibrationPointView = CalibrationPointView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
 
   var index = 0
   let colorList : [UIColor] = [UIColor.red, UIColor.blue, UIColor.green, UIColor.orange, UIColor.cyan]
 
-  let semaphore = DispatchSemaphore(value: 1)
-  var isMove : Bool = false
-
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     versionLabel.text = "Version : \(GazeTracker.getFrameworkVersion())"
-    checkCameraAuthorizationStatus()
 
-    startBtn.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
-    stopBtn.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
-    caliBtn.addTarget(self, action: #selector(caliButtonTapped), for: .touchUpInside)
+      
+    dirBtn.addTarget(self, action: #selector(directionAuthTapped), for: .touchUpInside)
+    dotBtn.addTarget(self, action: #selector(dotsAuthTapped), for: .touchUpInside)
+    pasBtn.addTarget(self, action: #selector(passcodeAuthTapped), for: .touchUpInside)
+    imgBtn.addTarget(self, action: #selector(imageAuthTapped), for: .touchUpInside)
+      
+    dirBtn.isEnabled = true
+    dotBtn.isEnabled = true
+    imgBtn.isEnabled = true
+    pasBtn.isEnabled = true
 
-    startBtn.isEnabled = false
-    stopBtn.isEnabled = false
-    caliBtn.isEnabled = false
 
-    self.view.addSubview(pointView)
-    self.view.addSubview(calibrationPointView)
-    pointView.isHidden = true
-    self.calibrationPointView.isHidden = true
+    
+  }
+    
+  @objc func directionAuthTapped(_ sender: Any) {
+      let storyboard = UIStoryboard(name: "Main", bundle: nil)
+      guard let directionVC = storyboard.instantiateViewController(
+          withIdentifier: "DirectionBasedController"
+      ) as? DirectionBasedController else {
+          return
+      }
 
+      // Force the view to fill the entire screen
+      directionVC.modalPresentationStyle = .fullScreen
+
+      // Now present it
+      self.present(directionVC, animated: true, completion: nil)
   }
 
-  // Function to check and request camera authorization
-  func checkCameraAuthorizationStatus() {
-    let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
-
-    switch cameraAuthorizationStatus {
-      case .authorized:
-        // Camera access is already authorized
-        print("Camera access is authorized.")
-        self.initGazeTracker()
-      case .notDetermined:
-        // Authorization has not been requested yet, request permission
-        AVCaptureDevice.requestAccess(for: .video) { granted in
-          if granted {
-            self.initGazeTracker()
-            print("Camera access granted.")
-          } else {
-            print("Camera access denied.")
-          }
-        }
-      case .denied, .restricted:
-        // Access is denied or restricted
-        print("Camera access is denied or restricted.")
-        // Prompt user to go to settings
-        showSettingsAlert()
-      @unknown default:
-        fatalError("Unknown authorization status.")
+  @objc func dotsAuthTapped(_ sender: Any) {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    guard let dotsVC = storyboard.instantiateViewController(
+        withIdentifier: "DotsController"
+    ) as? DotsController else {
+        return
     }
+
+    // Force the view to fill the entire screen
+    dotsVC.modalPresentationStyle = .fullScreen
+
+    // Now present it
+    self.present(dotsVC, animated: true, completion: nil)
+  }
+    
+  @objc func passcodeAuthTapped() {
+  // Hide other views if needed and display the direction-based authentication view
+    print("Switching to Direction-based Authentication")
+  // e.g., directionAuthView.isHidden = false
   }
 
-  // Function to show an alert prompting the user to go to settings
-  func showSettingsAlert() {
-      let alert = UIAlertController(title: "Camera Access Needed", message: "Please allow camera access in settings to use the camera.", preferredStyle: .alert)
-      alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-      alert.addAction(UIAlertAction(title: "Go to Settings", style: .default, handler: { _ in
-          if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-              UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
-          }
-      }))
-      present(alert, animated: true, completion: nil)
+  @objc func imageAuthTapped() {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    guard let imgVC = storyboard.instantiateViewController(
+        withIdentifier: "ImageController"
+    ) as? ImageController else {
+        return
+    }
+
+    // Force the view to fill the entire screen
+    imgVC.modalPresentationStyle = .fullScreen
+
+    // Now present it
+    self.present(imgVC, animated: true, completion: nil)
   }
-
-  func initGazeTracker() {
-    GazeTracker.initGazeTracker(license: license, delegate: self)
-  }
-
-  // Button action functions
-  @objc func startButtonTapped() {
-      print("Start button tapped.")
-      // Add functionality for start button
-    self.tracker?.startTracking()
-  }
-
-  @objc func stopButtonTapped() {
-      print("Stop button tapped.")
-      // Add functionality for stop button
-    self.tracker?.stopTracking()
-  }
-
-  @objc func caliButtonTapped() {
-      print("Calibration button tapped.")
-      // Add functionality for calibration button
-    self.tracker?.startCalibration(mode: .fivePoint, criteria: .default, region: UIScreen.main.bounds)
-    self.pointView.isHidden = true
-    self.startBtn.isHidden = true
-    self.stopBtn.isHidden = true
-    self.caliBtn.isHidden = true
-    self.versionLabel.isHidden = true
-  }
-
-
+  
   func showErrorAlert(message: String) {
     let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     present(alert, animated: true, completion: nil)
-  }
-
-}
-
-extension ViewController: InitializationDelegate ,TrackingDelegate, CalibrationDelegate, StatusDelegate {
-
-  func onInitialized(tracker: GazeTracker?, error: InitializationError) {
-    if error == .errorNone {
-      self.tracker = tracker
-      self.tracker?.trackingDelegate = self
-      self.tracker?.calibrationDelegate = self
-      self.tracker?.statusDelegate = self
-      self.startBtn.isEnabled = true
-    } else {
-      showErrorAlert(message: error.description)
-    }
-  }
-
-  func onMetrics(timestamp: Int, gazeInfo: GazeInfo, faceInfo: FaceInfo, blinkInfo: BlinkInfo, userStatusInfo: UserStatusInfo) {
-    DispatchQueue.main.async {
-      if gazeInfo.trackingState == .success && self.tracker?.isCalibrating() == false {
-        self.pointView.center = CGPoint(x: CGFloat(gazeInfo.x), y: CGFloat(gazeInfo.y))
-      }
-    }
-  }
-
-  func onCalibrationNextPoint(x: Double, y: Double) {
-    self.calibrationPointView.reset(to:self.colorList[self.index])
-    self.calibrationPointView.movePoistion(to: CGPoint(x: CGFloat(x), y: CGFloat(y)))
-    self.calibrationPointView.setProgress(progress: 0)
-    self.index += 1
-
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-      self.calibrationPointView.isHidden = false
-    }
-
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-      self.tracker?.startCollectSamples()
-    }
-  }
-
-  func onCalibrationProgress(progress: Double) {
-    self.calibrationPointView.setProgress(progress: progress)
-  }
-
-  func onCalibrationFinished(calibrationData: [Double]) {
-    self.calibrationPointView.isHidden = true
-    self.pointView.isHidden = false
-
-    self.startBtn.isHidden = false
-    self.stopBtn.isHidden = false
-    self.caliBtn.isHidden = false
-    self.versionLabel.isHidden = false
-    self.index = 0
-  }
-
-  func onStarted() {
-    self.stopBtn.isEnabled = true
-    self.startBtn.isEnabled = false
-    self.caliBtn.isEnabled = true
-    self.pointView.isHidden = false
-  }
-
-  func onStopped(error: StatusError) {
-    self.startBtn.isEnabled = true
-    self.stopBtn.isEnabled = false
-    self.caliBtn.isEnabled = false
   }
 }
