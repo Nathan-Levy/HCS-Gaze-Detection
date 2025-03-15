@@ -52,6 +52,8 @@ class PasscodeController: UIViewController {
   // MARK: - Gaze Dwell Detection Properties
   var currentGazedButton: UIButton?
   var dwellTimer: Timer?
+    
+    var authenticationStartTime: Date?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -80,6 +82,24 @@ class PasscodeController: UIViewController {
       
     setupExtraAuthButtons()
   }
+    
+    func showAuthenticationPopup(timeElapsed: Double) {
+        // Create the alert controller
+        let alert = UIAlertController(
+            title: "Authentication Successful",
+            message: String(format: "Authentication Time: %.2f sec", timeElapsed),
+            preferredStyle: .alert
+        )
+
+        // Add a dismiss button
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+        alert.addAction(dismissAction)
+
+        // Present the alert on the main thread to ensure UI updates properly
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 
   func setupExtraAuthButtons() {
     // Define button dimensions and spacing
@@ -96,8 +116,8 @@ class PasscodeController: UIViewController {
   // MARK: - Passcode UI Setup
   func setupPasscodeView() {
     // Define the size of the passcode container
-    let width: CGFloat = 250
-    let height: CGFloat = 300
+    let width: CGFloat = 350
+    let height: CGFloat = 390
     passcodeView = UIView(frame: CGRect(x: (view.frame.width - width) / 2,
                                         y: (view.frame.height - height) / 2,
                                         width: width,
@@ -121,7 +141,7 @@ class PasscodeController: UIViewController {
       ["", "0", "⌫"]
     ]
     let buttonWidth = width / 3
-    let buttonHeight: CGFloat = 50
+    let buttonHeight: CGFloat = 70  // Increased from 50
     
     // Loop over the rows and columns to create the buttons
     for (rowIndex, row) in buttonTitles.enumerated() {
@@ -139,37 +159,45 @@ class PasscodeController: UIViewController {
     }
   }
   
-  @objc func passcodeButtonTapped(_ sender: UIButton) {
-    guard let title = sender.currentTitle else { return }
-    
-    if title == "⌫" {
-      // Remove the last digit if available
-      if !passcodeInput.isEmpty {
-        passcodeInput.removeLast()
-      }
-    } else if title != "" {
-      // Append digit to the input
-      passcodeInput.append(title)
+    @objc func passcodeButtonTapped(_ sender: UIButton) {
+        guard let title = sender.currentTitle else { return }
+
+        if title == "⌫" {
+            // Remove the last digit if available
+            if !passcodeInput.isEmpty {
+                passcodeInput.removeLast()
+            }
+        } else if title != "" {
+            // Append digit to the input
+            passcodeInput.append(title)
+        }
+
+        // Update the label (showing dots or the actual numbers is up to you)
+        passcodeLabel.text = passcodeInput.isEmpty ? "Enter Passcode" : passcodeInput
+
+        // If a 4-digit passcode is required, check it here
+        if passcodeInput.count == 4 {
+            if passcodeInput == "1234" {  // Example correct passcode
+                print("Passcode correct!")
+                passcodeView.isHidden = true
+
+                // **Calculate authentication time**
+                if let startTime = authenticationStartTime {
+                    let elapsedTime = Date().timeIntervalSince(startTime) // Time in seconds
+                    print("Authentication successful! Time taken: \(elapsedTime) seconds")
+
+                    // **Show the popup**
+                    showAuthenticationPopup(timeElapsed: elapsedTime)
+                }
+
+            } else {
+                print("Incorrect passcode!")
+                // Reset the input on error
+                passcodeInput = ""
+                passcodeLabel.text = "Enter Passcode"
+            }
+        }
     }
-    
-    // Update the label (showing dots or the actual numbers is up to you)
-    passcodeLabel.text = passcodeInput.isEmpty ? "Enter Passcode" : passcodeInput
-    
-    // For example, if a 4-digit passcode is required, check it here
-    if passcodeInput.count == 4 {
-      // Validate passcode; here "1234" is used as an example
-      if passcodeInput == "1234" {
-        print("Passcode correct!")
-        // Optionally, hide the passcode view or transition to another screen
-        passcodeView.isHidden = true
-      } else {
-        print("Incorrect passcode!")
-        // Reset the input on error
-        passcodeInput = ""
-        passcodeLabel.text = "Enter Passcode"
-      }
-    }
-  }
     
   // MARK: - Gaze-Driven Passcode Input
   // In the onMetrics callback below, after updating the gaze point, we determine whether the gaze falls over one of the passcode buttons.
@@ -193,7 +221,7 @@ class PasscodeController: UIViewController {
       if currentGazedButton != button {
         currentGazedButton = button
         dwellTimer?.invalidate()
-        dwellTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
+          dwellTimer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: false) { [weak self] _ in
           guard let self = self else { return }
           // Trigger the passcode input for this button via gaze.
           self.passcodeButtonTapped(button)
@@ -343,6 +371,9 @@ extension PasscodeController: InitializationDelegate, TrackingDelegate, Calibrat
     self.versionLabel.isHidden = false
     self.passcodeView.isHidden = false
     self.index = 0
+      
+    // **Start the authentication timer NOW**
+    authenticationStartTime = Date()
   }
 
   func onStarted() {
