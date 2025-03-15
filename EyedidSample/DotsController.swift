@@ -27,7 +27,7 @@ class DotsController: UIViewController {
     // We'll still call them "gazeButtons," but they're effectively "dots."
     var gazeButtons: [UIButton] = []
     var inputSequence: [Int] = []
-    let requiredSequence: [Int] = [1, 4, 7]  // Example password sequence
+    let requiredSequence: [Int] = [1, 4, 7, 5, 3]  // Example password sequence
 
     // Dwell detection
     var currentGazedButton: UIButton?

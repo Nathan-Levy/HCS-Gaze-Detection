@@ -47,7 +47,7 @@ class DirectionBasedController: UIViewController {
   var currentGazeDirection: Direction = .none
   var dwellTimer: Timer?
   var inputSequence: [Direction] = []
-  let requiredSequence: [Direction] = [.up, .up, .right, .left]
+    let requiredSequence: [Direction] = [.up, .up, .right, .left, .down, .down]
 
   // Dot views for sequence display
   var dotViews: [UIView] = []

@@ -177,7 +177,7 @@ class PasscodeController: UIViewController {
 
         // If a 4-digit passcode is required, check it here
         if passcodeInput.count == 4 {
-            if passcodeInput == "1234" {  // Example correct passcode
+            if passcodeInput == "123456" {  // Example correct passcode
                 print("Passcode correct!")
                 passcodeView.isHidden = true
 
