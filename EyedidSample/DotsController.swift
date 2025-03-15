@@ -32,6 +32,11 @@ class DotsController: UIViewController {
     // Dwell detection
     var currentGazedButton: UIButton?
     var dwellTimer: Timer?
+    
+    var authenticationStartTime: Date?
+    var authenticationTimeLabel: UILabel!
+    var dismissButton: UIButton!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +64,30 @@ class DotsController: UIViewController {
         
         // Bring the gaze indicator to the front
         view.bringSubviewToFront(pointView)
+    
+    }
+    
+    func showAuthenticationPopup(timeElapsed: Double) {
+        // Create the alert controller
+        let alert = UIAlertController(
+            title: "Authentication Successful",
+            message: String(format: "Authentication Time: %.2f sec", timeElapsed),
+            preferredStyle: .alert
+        )
+
+        // Add a dismiss button
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+        alert.addAction(dismissAction)
+
+        // Present the alert on the main thread to ensure UI updates properly
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
+    // Dismiss function
+    @objc func dismissPopup() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Setup Dots Layout
@@ -160,6 +189,16 @@ class DotsController: UIViewController {
             if inputSequence == requiredSequence {
                 print("Correct password entered!")
                 flashScreen(color: .green)
+
+                // **Calculate authentication time**
+                if let startTime = authenticationStartTime {
+                    let elapsedTime = Date().timeIntervalSince(startTime) // Time in seconds
+                    print("Authentication successful! Time taken: \(elapsedTime) seconds")
+
+                    // **Show the popup**
+                    showAuthenticationPopup(timeElapsed: elapsedTime)
+                }
+
             } else {
                 print("Incorrect password!")
                 flashScreen(color: .red)
@@ -326,6 +365,8 @@ extension DotsController: InitializationDelegate, TrackingDelegate, CalibrationD
         for button in gazeButtons {
             button.isHidden = false
         }
+        
+        authenticationStartTime = Date()
     }
     
     func onStarted() {

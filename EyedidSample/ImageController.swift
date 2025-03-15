@@ -38,6 +38,11 @@ class ImageController: UIViewController {
     var verificationTimeoutTimer: Timer?
     var isVerified: Bool = false
     
+    var authenticationStartTime: Date?
+    var authenticationTimeLabel: UILabel!
+    var dismissButton: UIButton!
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         versionLabel.text = "Version: \(GazeTracker.getFrameworkVersion())"
@@ -64,6 +69,30 @@ class ImageController: UIViewController {
 
         // Bring the gaze indicator to the front
         view.bringSubviewToFront(pointView)
+        
+        // Create and configure the label
+        authenticationTimeLabel = UILabel(frame: CGRect(x: 20, y: 100, width: view.frame.width - 40, height: 50))
+        authenticationTimeLabel.textAlignment = .center
+        authenticationTimeLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        authenticationTimeLabel.textColor = .white
+        authenticationTimeLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        authenticationTimeLabel.layer.cornerRadius = 10
+        authenticationTimeLabel.layer.masksToBounds = true
+        authenticationTimeLabel.isHidden = true  // Initially hidden
+
+        view.addSubview(authenticationTimeLabel)
+        
+        // Create and configure the dismiss button
+        dismissButton = UIButton(type: .system)
+        dismissButton.frame = CGRect(x: authenticationTimeLabel.frame.maxX - 40, y: authenticationTimeLabel.frame.minY - 10, width: 30, height: 30)
+        dismissButton.setTitle("✕", for: .normal)
+        dismissButton.setTitleColor(.white, for: .normal)
+        dismissButton.backgroundColor = UIColor.red
+        dismissButton.layer.cornerRadius = 15
+        dismissButton.isHidden = true  // Initially hidden
+        dismissButton.addTarget(self, action: #selector(dismissAuthTime), for: .touchUpInside)
+
+        view.addSubview(dismissButton)
     }
     
 
@@ -103,11 +132,11 @@ class ImageController: UIViewController {
         print("targetRectInImageView: \(targetRectInImageView)")
         
         // Create a UIView (or UIButton) to represent the target box
-        let targetView = UIView(frame: targetRectInImageView)
-        targetView.backgroundColor = UIColor.clear
-        targetView.layer.borderColor = UIColor.red.cgColor
-        targetView.layer.borderWidth = 2
-        imageView.addSubview(targetView)
+//        let targetView = UIView(frame: targetRectInImageView)
+//        targetView.backgroundColor = UIColor.clear
+//        targetView.layer.borderColor = UIColor.red.cgColor
+//        targetView.layer.borderWidth = 2
+//        imageView.addSubview(targetView)
     }
 
     // MARK: - Dwell-based Authentication
@@ -142,9 +171,29 @@ class ImageController: UIViewController {
     }
     
     func authenticationSuccess() {
-        // Example: Flash screen green, or show an alert, etc.
-        print("Authenticated: user gazed at the wolf!")
+        isVerified = true
+        
+        if let startTime = authenticationStartTime {
+                let elapsedTime = Date().timeIntervalSince(startTime) // Time in seconds
+                let timeString = String(format: "Authentication Time: %.2f sec",elapsedTime)
+                print(timeString)
+                
+                // Show the label and update text
+                authenticationTimeLabel.text = timeString
+                authenticationTimeLabel.isHidden = false
+                
+                // Position the dismiss button correctly
+                dismissButton.frame.origin.x = authenticationTimeLabel.frame.maxX - 40
+                dismissButton.frame.origin.y = authenticationTimeLabel.frame.minY - 10
+                dismissButton.isHidden = false
+        }
+        
         flashScreen(color: .green)
+    }
+    
+    @objc func dismissAuthTime() {
+        authenticationTimeLabel.isHidden = true
+        dismissButton.isHidden = true
     }
     
     func flashScreen(color: UIColor) {
@@ -289,17 +338,18 @@ extension ImageController: InitializationDelegate, TrackingDelegate, Calibration
         homeBtn.isHidden = false
         versionLabel.isHidden = false
         
-        // Show the image again after calibration
         imageView.isHidden = false
         
         // Reset verification flag
         isVerified = false
         
-        // Start the timeout timer for 5 seconds.
+        // **Start tracking authentication time**
+        authenticationStartTime = Date()
+        
+        // Start the timeout timer for 5 seconds
         verificationTimeoutTimer?.invalidate()
         verificationTimeoutTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
             guard let self = self else { return }
-            // If the user hasn't been verified within 5 seconds, flash red.
             if !self.isVerified {
                 self.flashScreen(color: .red)
             }
