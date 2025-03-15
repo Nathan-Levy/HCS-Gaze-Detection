@@ -11,7 +11,7 @@
 		2C070F9C2D78B07500F1384F /* DirectionBasedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C070F9B2D78B06500F1384F /* DirectionBasedController.swift */; };
 		2C070F9E2D78B57600F1384F /* DotsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C070F9D2D78B56300F1384F /* DotsController.swift */; };
 		2CFBA62C2D7DB371008F7994 /* ImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFBA62B2D7DB36B008F7994 /* ImageController.swift */; };
-		2CFBA62E2D7DB5D6008F7994 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFBA62D2D7DB5D4008F7994 /* Passcode.swift */; };
+		2CFBA62E2D7DB5D6008F7994 /* PasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFBA62D2D7DB5D4008F7994 /* PasscodeController.swift */; };
 		636528412CC2055A006C1C4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636528372CC2055A006C1C4F /* AppDelegate.swift */; };
 		636528422CC2055A006C1C4F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6365283E2CC2055A006C1C4F /* SceneDelegate.swift */; };
 		636528442CC2055A006C1C4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 636528382CC2055A006C1C4F /* Assets.xcassets */; };
@@ -42,7 +42,7 @@
 		2C070F9B2D78B06500F1384F /* DirectionBasedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionBasedController.swift; sourceTree = "<group>"; };
 		2C070F9D2D78B56300F1384F /* DotsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotsController.swift; sourceTree = "<group>"; };
 		2CFBA62B2D7DB36B008F7994 /* ImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageController.swift; sourceTree = "<group>"; };
-		2CFBA62D2D7DB5D4008F7994 /* Passcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Passcode.swift; sourceTree = "<group>"; };
+		2CFBA62D2D7DB5D4008F7994 /* PasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeController.swift; sourceTree = "<group>"; };
 		5A6E11FCDADE1FEEE877300F /* Pods-EyedidSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EyedidSample.debug.xcconfig"; path = "Target Support Files/Pods-EyedidSample/Pods-EyedidSample.debug.xcconfig"; sourceTree = "<group>"; };
 		636528372CC2055A006C1C4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		636528382CC2055A006C1C4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 		636528402CC2055A006C1C4F /* EyedidSample */ = {
 			isa = PBXGroup;
 			children = (
-				2CFBA62D2D7DB5D4008F7994 /* Passcode.swift */,
+				2CFBA62D2D7DB5D4008F7994 /* PasscodeController.swift */,
 				2CFBA62B2D7DB36B008F7994 /* ImageController.swift */,
 				2C070F9D2D78B56300F1384F /* DotsController.swift */,
 				2C070F9B2D78B06500F1384F /* DirectionBasedController.swift */,
@@ -243,7 +243,7 @@
 				2C070F9E2D78B57600F1384F /* DotsController.swift in Sources */,
 				2CFBA62C2D7DB371008F7994 /* ImageController.swift in Sources */,
 				636528412CC2055A006C1C4F /* AppDelegate.swift in Sources */,
-				2CFBA62E2D7DB5D6008F7994 /* Passcode.swift in Sources */,
+				2CFBA62E2D7DB5D6008F7994 /* PasscodeController.swift in Sources */,
 				2C070F9C2D78B07500F1384F /* DirectionBasedController.swift in Sources */,
 				636528422CC2055A006C1C4F /* SceneDelegate.swift in Sources */,
 				63DFA31A2CC21FCC00C8EE8F /* CalibrationPointView.swift in Sources */,

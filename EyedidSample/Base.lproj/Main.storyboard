@@ -285,6 +285,68 @@
             </objects>
             <point key="canvasLocation" x="20.610687022900763" y="4.9295774647887329"/>
         </scene>
+        <!--Passcode Controller-->
+        <scene sceneID="Kke-Qd-DSs">
+            <objects>
+                <viewController storyboardIdentifier="PasscodeController" id="BSj-0V-05C" customClass="PasscodeController" customModule="EyedidSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="a7x-c7-Nd7">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dag-RV-102">
+                                <rect key="frame" x="245" y="626" width="132" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Start tracking"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O6C-ef-N39">
+                                <rect key="frame" x="245" y="711" width="132" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Calibration"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="version" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NcJ-oW-Cax">
+                                <rect key="frame" x="15" y="767" width="55" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBN-Eu-4sh">
+                                <rect key="frame" x="245" y="669" width="132" height="34"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Stop tracking"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bf8-k8-b5V" userLabel="Home Btn">
+                                <rect key="frame" x="15" y="711" width="132" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Home"/>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="KQi-Ob-SSg"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="KQi-Ob-SSg" firstAttribute="trailing" secondItem="O6C-ef-N39" secondAttribute="trailing" constant="15" id="BRz-FW-N3R"/>
+                            <constraint firstItem="O6C-ef-N39" firstAttribute="top" secondItem="FBN-Eu-4sh" secondAttribute="bottom" constant="15" id="HGK-za-DNX"/>
+                            <constraint firstItem="O6C-ef-N39" firstAttribute="width" secondItem="FBN-Eu-4sh" secondAttribute="width" id="LNE-eO-wuI"/>
+                            <constraint firstItem="KQi-Ob-SSg" firstAttribute="trailing" secondItem="dag-RV-102" secondAttribute="trailing" constant="15" id="N4x-Wo-g1n"/>
+                            <constraint firstItem="FBN-Eu-4sh" firstAttribute="top" secondItem="dag-RV-102" secondAttribute="bottom" constant="15" id="NQ3-MC-CFK"/>
+                            <constraint firstItem="NcJ-oW-Cax" firstAttribute="leading" secondItem="KQi-Ob-SSg" secondAttribute="leading" constant="15" id="Qe6-6q-8ov"/>
+                            <constraint firstItem="KQi-Ob-SSg" firstAttribute="trailing" secondItem="FBN-Eu-4sh" secondAttribute="trailing" constant="15" id="Zxn-Wt-2Ps"/>
+                            <constraint firstItem="KQi-Ob-SSg" firstAttribute="bottom" secondItem="O6C-ef-N39" secondAttribute="bottom" constant="70" id="goL-A4-O3G"/>
+                            <constraint firstItem="KQi-Ob-SSg" firstAttribute="bottom" secondItem="NcJ-oW-Cax" secondAttribute="bottom" constant="30" id="mvE-7C-ygp"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="caliBtn" destination="O6C-ef-N39" id="ekr-XZ-r0V"/>
+                        <outlet property="homeBtn" destination="bf8-k8-b5V" id="qK6-Tn-NNc"/>
+                        <outlet property="startBtn" destination="dag-RV-102" id="bwK-VU-ZyQ"/>
+                        <outlet property="stopBtn" destination="FBN-Eu-4sh" id="lDw-WU-NcW"/>
+                        <outlet property="versionLabel" destination="NcJ-oW-Cax" id="7NN-Ou-C9i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O37-wZ-96a" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="20.610687022900763" y="4.9295774647887329"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">

@@ -28,6 +28,7 @@ class PasscodeController: UIViewController {
   @IBOutlet weak var startBtn: UIButton!
   @IBOutlet weak var stopBtn: UIButton!
   @IBOutlet weak var caliBtn: UIButton!
+  @IBOutlet weak var homeBtn: UIButton!
   @IBOutlet weak var versionLabel: UILabel!
   
   var tracker: GazeTracker?
@@ -60,10 +61,12 @@ class PasscodeController: UIViewController {
     startBtn.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
     stopBtn.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
     caliBtn.addTarget(self, action: #selector(caliButtonTapped), for: .touchUpInside)
+    homeBtn.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
 
     startBtn.isEnabled = false
     stopBtn.isEnabled = false
     caliBtn.isEnabled = false
+    homeBtn.isEnabled = false
 
     self.view.addSubview(pointView)
     self.view.addSubview(calibrationPointView)
@@ -88,25 +91,6 @@ class PasscodeController: UIViewController {
     let startX = view.bounds.width - buttonWidth - spacing
     let firstY = view.bounds.height - (buttonHeight * 2 + spacing * 3)
     
-    // Create a button for Direction-based Authentication
-    let directionButton = UIButton(frame: CGRect(x: startX, y: firstY, width: buttonWidth, height: buttonHeight))
-    directionButton.setTitle("Direction", for: .normal)
-    directionButton.backgroundColor = .systemBlue
-    directionButton.layer.cornerRadius = 5
-    directionButton.addTarget(self, action: #selector(directionAuthTapped), for: .touchUpInside)
-    view.addSubview(directionButton)
-    
-    // Create a button for Highlight Dots Authentication
-    let dotsButton = UIButton(frame: CGRect(x: startX, y: firstY + buttonHeight + spacing, width: buttonWidth, height: buttonHeight))
-    dotsButton.setTitle("Highlight Dots", for: .normal)
-    dotsButton.backgroundColor = .systemGreen
-    dotsButton.layer.cornerRadius = 5
-    dotsButton.addTarget(self, action: #selector(dotsAuthTapped), for: .touchUpInside)
-    view.addSubview(dotsButton)
-    
-    // Bring these buttons to the front (if needed)
-    view.bringSubviewToFront(directionButton)
-    view.bringSubviewToFront(dotsButton)
   }
     
   // MARK: - Passcode UI Setup
@@ -283,20 +267,18 @@ class PasscodeController: UIViewController {
     startBtn.isHidden = true
     stopBtn.isHidden = true
     caliBtn.isHidden = true
+    homeBtn.isHidden = true
     versionLabel.isHidden = true
     passcodeView.isHidden = true
   }
     
-  @objc func directionAuthTapped() {
-    // Hide other views if needed and display the direction-based authentication view
-    print("Switching to Direction-based Authentication")
-    // e.g., directionAuthView.isHidden = false
-  }
-
-  @objc func dotsAuthTapped() {
-    // Hide other views if needed and display the highlight-dots authentication view
-    print("Switching to Highlight Dots Authentication")
-    // e.g., dotsAuthView.isHidden = false
+  @objc func homeButtonTapped(_ sender: Any) {
+     let storyboard = UIStoryboard(name: "Main", bundle: nil)
+     guard let VC = storyboard.instantiateViewController(withIdentifier: "ViewController") as? ViewController else {
+       return
+     }
+     VC.modalPresentationStyle = .fullScreen
+     self.present(VC, animated: true, completion: nil)
   }
   
   func showErrorAlert(message: String) {
@@ -315,6 +297,7 @@ extension PasscodeController: InitializationDelegate, TrackingDelegate, Calibrat
       self.tracker?.calibrationDelegate = self
       self.tracker?.statusDelegate = self
       self.startBtn.isEnabled = true
+      self.homeBtn.isEnabled = true
     } else {
       showErrorAlert(message: error.description)
     }
@@ -356,6 +339,7 @@ extension PasscodeController: InitializationDelegate, TrackingDelegate, Calibrat
     self.startBtn.isHidden = false
     self.stopBtn.isHidden = false
     self.caliBtn.isHidden = false
+    self.homeBtn.isHidden = false
     self.versionLabel.isHidden = false
     self.passcodeView.isHidden = false
     self.index = 0
@@ -365,6 +349,7 @@ extension PasscodeController: InitializationDelegate, TrackingDelegate, Calibrat
     self.stopBtn.isEnabled = true
     self.startBtn.isEnabled = false
     self.caliBtn.isEnabled = true
+      self.homeBtn.isEnabled = true
     self.pointView.isHidden = false
   }
 
@@ -372,6 +357,7 @@ extension PasscodeController: InitializationDelegate, TrackingDelegate, Calibrat
     self.startBtn.isEnabled = true
     self.stopBtn.isEnabled = false
     self.caliBtn.isEnabled = false
+    self.homeBtn.isEnabled = true
   }
 }
 

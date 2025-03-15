@@ -82,13 +82,22 @@ class ViewController: UIViewController {
     self.present(dotsVC, animated: true, completion: nil)
   }
     
-  @objc func passcodeAuthTapped() {
-  // Hide other views if needed and display the direction-based authentication view
-    print("Switching to Direction-based Authentication")
-  // e.g., directionAuthView.isHidden = false
+  @objc func passcodeAuthTapped(_ sender: Any) {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    guard let passVC = storyboard.instantiateViewController(
+        withIdentifier: "PasscodeController"
+    ) as? PasscodeController else {
+        return
+    }
+
+    // Force the view to fill the entire screen
+    passVC.modalPresentationStyle = .fullScreen
+
+    // Now present it
+    self.present(passVC, animated: true, completion: nil)
   }
 
-  @objc func imageAuthTapped() {
+  @objc func imageAuthTapped(_ sender: Any) {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     guard let imgVC = storyboard.instantiateViewController(
         withIdentifier: "ImageController"
