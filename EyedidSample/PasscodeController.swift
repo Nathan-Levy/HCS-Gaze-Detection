@@ -176,7 +176,7 @@ class PasscodeController: UIViewController {
         passcodeLabel.text = passcodeInput.isEmpty ? "Enter Passcode" : passcodeInput
 
         // If a 4-digit passcode is required, check it here
-        if passcodeInput.count == 4 {
+        if passcodeInput.count == 6 {
             if passcodeInput == "123456" {  // Example correct passcode
                 print("Passcode correct!")
                 passcodeView.isHidden = true

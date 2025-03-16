@@ -48,6 +48,8 @@ class DirectionBasedController: UIViewController {
   var dwellTimer: Timer?
   var inputSequence: [Direction] = []
     let requiredSequence: [Direction] = [.up, .up, .right, .left, .down, .down]
+    
+    var authenticationStartTime: Date?
 
   // Dot views for sequence display
   var dotViews: [UIView] = []
@@ -86,6 +88,24 @@ class DirectionBasedController: UIViewController {
     self.view.bringSubviewToFront(pointView)
   }
     
+    func showAuthenticationPopup(timeElapsed: Double) {
+        // Create the alert controller
+        let alert = UIAlertController(
+            title: "Authentication Successful",
+            message: String(format: "Authentication Time: %.2f sec", timeElapsed),
+            preferredStyle: .alert
+        )
+
+        // Add a dismiss button
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+        alert.addAction(dismissAction)
+
+        // Present the alert on the main thread to ensure UI updates properly
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
   // MARK: - UI Setup Methods
   
   func setupCenterDeadzone() {
@@ -106,7 +126,7 @@ class DirectionBasedController: UIViewController {
     
   func setupSequenceDots() {
     let dotSize: CGFloat = 20
-    let totalDots = 4
+    let totalDots = 6
     let spacing: CGFloat = 20
     let totalWidth = (CGFloat(totalDots) * dotSize) + (CGFloat(totalDots - 1) * spacing)
     let startX = (view.bounds.width - totalWidth) / 2
@@ -197,20 +217,30 @@ class DirectionBasedController: UIViewController {
     }
   }
   
-  func checkInputSequence() {
-    if inputSequence.count == requiredSequence.count {
-      if inputSequence == requiredSequence {
-        print("Correct sequence!")
-        flashScreenGreen()
-      } else {
-        print("Incorrect sequence. Try again.")
-        flashScreenRed()
-      }
-      // Reset sequence and dots for the next attempt.
-      inputSequence.removeAll()
-      resetDots()
+    func checkInputSequence() {
+        if inputSequence.count == requiredSequence.count {
+            if inputSequence == requiredSequence {
+                print("Correct sequence!")
+                flashScreenGreen()
+
+                // **Calculate authentication time**
+                if let startTime = authenticationStartTime {
+                    let elapsedTime = Date().timeIntervalSince(startTime) // Time in seconds
+                    print("Authentication successful! Time taken: \(elapsedTime) seconds")
+
+                    // **Show the popup**
+                    showAuthenticationPopup(timeElapsed: elapsedTime)
+                }
+            } else {
+                print("Incorrect sequence. Try again.")
+                flashScreenRed()
+            }
+            
+            // Reset sequence and dots for the next attempt.
+            inputSequence.removeAll()
+            resetDots()
+        }
     }
-  }
   
   func resetDots() {
     for dot in dotViews {
@@ -378,6 +408,9 @@ extension DirectionBasedController: InitializationDelegate, TrackingDelegate, Ca
     self.resetDots()
     self.inputSequence.removeAll()
     self.index = 0
+      
+    // **Start the authentication timer NOW**
+    authenticationStartTime = Date()
   }
     
   func onStarted() {
